@@ -20,7 +20,8 @@
    "version": "1.0.0",
    "main": "server.js",
    "scripts": {
-      "test": "supervisor server.js"
+      "test": "supervisor server.js",
+      "build" : "node build"
    },
    "repository": {
       "type": "git",
