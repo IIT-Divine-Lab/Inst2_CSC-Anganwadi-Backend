@@ -20,7 +20,7 @@
    "version": "1.0.0",
    "main": "server.js",
    "scripts": {
-      "test": "supervisor server.js",
+      "test": "node server.js",
       "start": "node src/index.js",
       "build": "echo 'No build step defined'"
    },
