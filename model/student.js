@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 // const Joi = require("joi");
 const studentSchema = new mongoose.Schema({
    name: {

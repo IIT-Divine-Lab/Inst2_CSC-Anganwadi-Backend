@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 // const Joi = require("joi");
 
-const mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
 // Define the schema for a question object
 const questionSchema = new mongoose.Schema({
