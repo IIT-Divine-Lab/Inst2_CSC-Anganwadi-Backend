@@ -21,7 +21,7 @@
    "main": "server.js",
    "scripts": {
       "test": "supervisor server.js",
-      "build": "npm run build"
+      "build": "echo 'No build step defined'"
    },
    "repository": {
       "type": "git",
