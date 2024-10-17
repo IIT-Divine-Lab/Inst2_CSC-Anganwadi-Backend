@@ -21,6 +21,7 @@
    "main": "server.js",
    "scripts": {
       "test": "supervisor server.js",
+      "start": "node src/index.js",
       "build": "echo 'No build step defined'"
    },
    "repository": {
