@@ -5,6 +5,7 @@ const connection = require("./startup/db");
 const app = express();
 const userRoutes = require("./routes/student")
 const assessmentRoutes = require("./routes/assessment")
+const resultRoutes = require("./routes/result")
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/assessment", assessmentRoutes)
+app.use("/api/v1/result", resultRoutes)
 
 app.use("/", (req, res, next) => {
    res.status(200).json({ message: "Api Working" })
