@@ -1,21 +1,35 @@
 const Assessment = require("../model/assessment");
 
-async function submitAssessment(req, res) {
+async function addNewQuestion(req, res) {
    try {
-      // Create a new assessment instance from the request body
-      const newAssessment = new Assessment({
-         userId: req.params.userId,
-         ageGroup: req.body.ageGroup,
-         questions: req.body.questions
-      });
+      console.log(req.body);
+      const { ageGroup, question } = req.body;
 
-      // Save the new assessment to the database
-      const savedAssessment = await newAssessment.save();
+      const { structure, questionText, questionType, questionImage, questionSound, totalOptions, option, correctAnswer } = question;
 
-      // Return the saved assessment as a response
-      res.status(201).json(savedAssessment);
-   } catch (err) {
-      console.error('Error saving assessment:', err);
-      res.status(500).json({ message: 'Error saving assessment', error: err.message });
+      requireQuesFields = { structure, questionText, questionType, questionImage, questionSound, totalOptions, option, correctAnswer };
+
+      const quest = await Assessment.create({ ageGroup, question: requireQuesFields });
+
+      res.status(200).json({
+         message: "Success",
+         question: quest
+      })
+   } catch (error) {
+      next(error)
    }
 }
+
+async function getQuestionAgeWise(req, res) {
+   try {
+      const { ageGroup } = req.body;
+
+      const questions = await Assessment.find({ ageGroup });
+      if (questions.length === 0) res.status(201).json({ message: "No questions for this age group." })
+      else res.status(200).json({ message: "Success", questions });
+   } catch (error) {
+      next(error)
+   }
+}
+
+module.exports = { addNewQuestion, getQuestionAgeWise }

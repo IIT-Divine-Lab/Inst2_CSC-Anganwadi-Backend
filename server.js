@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const connection = require("./startup/db");
 const app = express();
 const userRoutes = require("./routes/student")
+const assessmentRoutes = require("./routes/assessment")
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/assessment", assessmentRoutes)
 
 app.use("/", (req, res, next) => {
    res.status(200).json({ message: "Api Working" })
@@ -36,5 +38,5 @@ app.listen(process.env.PORT || 5000, function () {
       this.address().port,
       app.settings.env
    );
-   connection("mongodb+srv://cscAnganWadiIIT:yBaXJTXUN0uSvvDV@csctabapp.dmjpu.mongodb.net/?retryWrites=true");
+   connection("mongodb+srv://cscAnganWadiIIT:yBaXJTXUN0uSvvDV@csctabapp.dmjpu.mongodb.net/?retryWrites=true&w=majority&appName=csctabapp");
 });

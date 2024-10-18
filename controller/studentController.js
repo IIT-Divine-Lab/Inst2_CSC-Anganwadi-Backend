@@ -3,10 +3,11 @@ const Assessment = require("../model/assessment");
 
 async function userRegister(req, res, next) {
    try {
-      const { name, age, rollno, gender, awcentre } = req.body;
-      await Student.create({ name, age, rollno, gender, awcentre });
+      const { name, agegroup, rollno, gender, awcentre } = req.body;
+      const user = await Student.create({ name, age: agegroup, rollno, gender, awcentre });
       res.status(200).json({
-         message: "Success"
+         message: "Success",
+         user
       })
    }
    catch (error) {
@@ -28,9 +29,8 @@ async function patchAssessment(req, res, next) {
 
    if (assessId === undefined) res.status(404).json({ message: "Error" })
 
-   console.log(assessId);
    let user = await Student.findByIdAndUpdate({ _id: userId }, { assessId });
-   console.log(user);
+   
    res.json({ message: "Success" });
 }
 
