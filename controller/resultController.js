@@ -17,8 +17,10 @@ async function submitAssessment(req, res, next) {
             question: quest
          })
       }
-   } catch (error) {
-      next(error)
+   }
+   catch (error) {
+      console.log(error.errors);
+      res.status(404).json({ message: "Fail in submitting assessment", error: error.errors });
    }
 }
 
