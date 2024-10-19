@@ -3,8 +3,8 @@ const Assessment = require("../model/assessment");
 
 async function userRegister(req, res, next) {
    try {
-      const { name, agegroup, rollno, gender, awcentre } = req.body;
-      const user = await Student.create({ name, age: agegroup, rollno, gender, awcentre });
+      const { name, age, rollno, gender, awcentre } = req.body;
+      const user = await Student.create({ name, age, rollno, gender, awcentre });
       res.status(200).json({
          message: "Success",
          user
