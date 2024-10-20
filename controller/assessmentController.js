@@ -5,9 +5,9 @@ async function addNewQuestion(req, res) {
       console.log(req.body);
       const { ageGroup, question } = req.body;
 
-      const { structure, questionText, questionType, questionImage, questionSound, totalOptions, option, correctAnswer } = question;
+      const { structure, questionText, questionType, answerImage, questionImage, questionSound, totalOptions, option, correctAnswer } = question;
 
-      requireQuesFields = { structure, questionText, questionType, questionImage, questionSound, totalOptions, option, correctAnswer };
+      requireQuesFields = { structure, questionText, answerImage, questionType, questionImage, questionSound, totalOptions, option, correctAnswer };
 
       const quest = await Assessment.create({ ageGroup, question: requireQuesFields });
 

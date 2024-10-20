@@ -26,6 +26,9 @@ const assessmentSchema = new mongoose.Schema({
       questionSound: {
          type: String
       },
+      answerImage:{
+         type: String
+      },
       totalOptions: {
          type: Number
       },
