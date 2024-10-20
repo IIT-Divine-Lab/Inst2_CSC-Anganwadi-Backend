@@ -15,7 +15,7 @@ async function addNewQuestion(req, res) {
          message: "Success",
          question: quest
       })
-   } 
+   }
    catch (error) {
       console.log(error.errors);
       res.status(404).json({ message: "Fail in adding question", error: error.errors });
@@ -26,10 +26,13 @@ async function getQuestionAgeWise(req, res) {
    try {
       const { ageGroup } = req.body;
 
-      const questions = await Assessment.find({ ageGroup });
-      if (questions.length === 0) res.status(201).json({ message: "No questions for this age group." })
-      else res.status(200).json({ message: "Success", questions });
-   } 
+      const ageQuestions = await Assessment.find({ ageGroup });
+      const commonQuestions = await Assessment.find({ ageGroup: "common" });
+      if (ageQuestions.length === 0 || commonQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
+      else {
+         res.status(200).json({ message: "Success", questions: [...ageQuestions, ...commonQuestions] });
+      }
+   }
    catch (error) {
       console.log(error.errors);
       res.status(404).json({ message: "Fail in fetching question age wise / common", error: error.errors });
