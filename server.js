@@ -6,6 +6,7 @@ const app = express();
 const userRoutes = require("./routes/student")
 const assessmentRoutes = require("./routes/assessment")
 const resultRoutes = require("./routes/result")
+const categoryRoutes = require("./routes/category")
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
    next();
 });
 
+app.use("/admin/api/v1/category", categoryRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/assessment", assessmentRoutes)
 app.use("/api/v1/result", resultRoutes)
