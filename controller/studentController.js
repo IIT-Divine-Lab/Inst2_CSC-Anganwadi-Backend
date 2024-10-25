@@ -1,5 +1,4 @@
 const Student = require("../model/student");
-const Assessment = require("../model/assessment");
 
 async function userRegister(req, res) {
    try {

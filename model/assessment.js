@@ -21,7 +21,12 @@ const assessmentSchema = new mongoose.Schema({
          required: true,
       },
       questionImage: {
-         type: String
+         before: {
+            type: String
+         },
+         after: {
+            type: String
+         }
       },
       questionSound: {
          type: String

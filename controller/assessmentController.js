@@ -5,9 +5,9 @@ async function addNewQuestion(req, res) {
       console.log(req.body);
       const { ageGroup, question } = req.body;
 
-      const { structure, questionText, questionType, answerImage, questionImage, questionSound, totalOptions, option, correctAnswer } = question;
+      const { structure, questionText, questionType, answerImage, questionImage, questionSound, questionSoundText, questionOnlyText, totalOptions, option, correctAnswer } = question;
 
-      requireQuesFields = { structure, questionText, answerImage, questionType, questionImage, questionSound, totalOptions, option, correctAnswer };
+      requireQuesFields = { structure, questionText, answerImage, questionType, questionImage, questionSound, questionSoundText, questionOnlyText, totalOptions, option, correctAnswer };
 
       const quest = await Assessment.create({ ageGroup, question: requireQuesFields });
 
@@ -25,10 +25,9 @@ async function addNewQuestion(req, res) {
 async function getQuestionAgeWise(req, res) {
    try {
       const { ageGroup } = req.body;
-
       const ageQuestions = await Assessment.find({ ageGroup });
       const commonQuestions = await Assessment.find({ ageGroup: "common" });
-      if (ageQuestions.length === 0 || commonQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
+      if (ageQuestions.length === 0 && commonQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
       else {
          res.status(200).json({ message: "Success", questions: [...ageQuestions, ...commonQuestions] });
       }
