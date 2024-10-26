@@ -7,6 +7,10 @@ const assessmentSchema = new mongoose.Schema({
       type: String,  // E.g., '6-8', '9-12', etc.
       required: true,
    },
+   quesCategory: {
+      type: String,
+      required: true,
+   },
    question: {
       structure: {
          type: Number,
@@ -29,6 +33,12 @@ const assessmentSchema = new mongoose.Schema({
          }
       },
       questionSound: {
+         type: String
+      },
+      questionSoundText: {
+         type: String
+      },
+      questionOnlyText: {
          type: String
       },
       answerImage:{

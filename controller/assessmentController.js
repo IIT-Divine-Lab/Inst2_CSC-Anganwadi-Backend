@@ -3,13 +3,13 @@ const Assessment = require("../model/assessment");
 async function addNewQuestion(req, res) {
    try {
       console.log(req.body);
-      const { ageGroup, question } = req.body;
+      const { ageGroup, quesCategory, question } = req.body;
 
       const { structure, questionText, questionType, answerImage, questionImage, questionSound, questionSoundText, questionOnlyText, totalOptions, option, correctAnswer } = question;
 
       requireQuesFields = { structure, questionText, answerImage, questionType, questionImage, questionSound, questionSoundText, questionOnlyText, totalOptions, option, correctAnswer };
 
-      const quest = await Assessment.create({ ageGroup, question: requireQuesFields });
+      const quest = await Assessment.create({ ageGroup, quesCategory, question: requireQuesFields });
 
       res.status(200).json({
          message: "Success",
@@ -19,6 +19,35 @@ async function addNewQuestion(req, res) {
    catch (error) {
       console.log(error.errors);
       res.status(404).json({ message: "Fail in adding question", error: error.errors });
+   }
+}
+
+async function getAll(req, res) {
+   try {
+      const allQuestions = await Assessment.find().lean();
+      if (allQuestions.length === 0) res.status(201).json({ message: "No questions found." })
+      else {
+         res.status(200).json({ message: "Success", questions: allQuestions });
+      }
+   }
+   catch (error) {
+      console.log(error.errors);
+      res.status(404).json({ message: "Fail in fetching question age wise / common", error: error.errors });
+   }
+}
+
+async function getQuestionById(req, res) {
+   try {
+      const { id } = req.params;
+      const question = await Assessment.findById(id);
+      if (!question) res.status(201).json({ message: "No question found." })
+      else {
+         res.status(200).json({ message: "Success", questions: question });
+      }
+   }
+   catch (error) {
+      console.log(error.errors);
+      res.status(404).json({ message: "Fail in fetching question age wise / common", error: error.errors });
    }
 }
 
@@ -38,4 +67,15 @@ async function getQuestionAgeWise(req, res) {
    }
 }
 
-module.exports = { addNewQuestion, getQuestionAgeWise }
+async function deleteQuestion(req, res) {
+   try {
+      const { id } = req.params;
+      const question = await Assessment.findByIdAndDelete(id);
+      res.status(200).json({ message: "Deleted Successfully", question });
+   } catch (error) {
+      console.log(error.errors);
+      res.status(404).json({ message: "Fail in deleting question", error: error.errors });
+   }
+}
+
+module.exports = { addNewQuestion, getQuestionAgeWise, getAll, deleteQuestion, getQuestionById }
