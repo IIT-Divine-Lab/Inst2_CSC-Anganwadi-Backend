@@ -24,4 +24,23 @@ async function submitAssessment(req, res, next) {
    }
 }
 
-module.exports = { submitAssessment }
+async function getAll(req, res, next) {
+   try {
+      const result = await Result.find().lean().populate('userId', 'name rollno awcentre age').populate('questions.quesId', 'quesCategory question.correctAnswer');
+      if (result.length === 0) {
+         res.status(201).json({
+            message: "No Record Found"
+         })
+         return;
+      }
+      res.status(200).json({
+         message: "Fetch Successfull",
+         result
+      })
+   } catch (error) {
+      console.log(error.errors);
+      res.status(404).json({ message: "Fail in fetching records", error: error.errors });
+   }
+}
+
+module.exports = { submitAssessment, getAll }

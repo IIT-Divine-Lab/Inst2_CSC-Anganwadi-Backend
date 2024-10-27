@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", getAll);
 router.post("/", addCategory);
+// router.patch("/", modifyTotalQuestions);
 router.put("/:id", modifyCategory);
 router.delete("/:id", deleteCategory);
 

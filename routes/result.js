@@ -1,9 +1,9 @@
 const express = require("express");
-const { submitAssessment } = require("../controller/resultController");
+const { submitAssessment, getAll } = require("../controller/resultController");
 
 const router = express.Router();
 
-// router.get("/", getAll);
+router.get("/", getAll);
 router.post("/", submitAssessment);
 // router.patch("/:userId", patchAssessment);
 

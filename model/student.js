@@ -25,7 +25,8 @@ const studentSchema = new mongoose.Schema({
       required: true
    },
    assessId: {
-      type: mongoose.Schema.ObjectId
+      type: mongoose.Schema.ObjectId,
+      ref: "Assessment"
    }
 })
 

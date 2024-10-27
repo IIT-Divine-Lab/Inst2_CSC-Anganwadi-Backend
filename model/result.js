@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const resultSchema = new mongoose.Schema({
    userId: {
       type: mongoose.Schema.ObjectId,
-      required: true
+      required: true,
+      ref: "Student"
    },
    questions: [{
       quesId: {
          type: mongoose.Schema.ObjectId,
-         required: true
+         required: true,
+         ref: "Assessment"
       },
       AnswerMarked: {
          type: [String],

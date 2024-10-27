@@ -8,6 +8,10 @@ const categorySchema = new mongoose.Schema({
    structure: {
       type: Number,
       required: true
+   },
+   totalQuestions: {
+      type: Number,
+      required: true
    }
 })
 
