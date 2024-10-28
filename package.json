@@ -23,8 +23,9 @@
    "scripts": {
       "start-dev": "supervisor server.js",
       "start": "node server.js",
-      "build": "git push heroku main",
-      "repo": "git add . && git commit -m \"Changes Made\" && git push && npm run build"
+      "build": "echo 'No build step defined'",
+      "heroku": "git push heroku main",
+      "repo": "git add . && git commit -m \"Changes Made\" && git push && npm run heroku"
    },
    "repository": {
       "type": "git",
