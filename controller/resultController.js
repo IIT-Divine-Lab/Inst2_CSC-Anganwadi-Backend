@@ -26,7 +26,7 @@ async function submitAssessment(req, res, next) {
 
 async function getAll(req, res, next) {
    try {
-      const result = await Result.find().lean().populate('userId', 'name rollno awcentre age').populate('questions.quesId', 'quesCategory question.correctAnswer');
+      const result = await Result.find().lean().populate('userId', 'name rollno awcentre age').populate('questions.quesId', 'quesCategory question.correctAnswer question.questionType');
       if (result.length === 0) {
          res.status(201).json({
             message: "No Record Found"
