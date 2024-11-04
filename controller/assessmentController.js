@@ -55,14 +55,15 @@ async function getQuestionAgeWise(req, res) {
    try {
       const { ageGroup } = req.body;
       // let ageGroup = "common";
-      const ageQuestions = await Assessment.find({ ageGroup });
+      const ageQuestions = await Assessment.find({ ageGroup }).sort({ quesCategory: 1 });
+
       // const ageQuestions = await Assessment.find({ ageGroup, quesCategory: "Task 5 (Sorting) - Big Small" });
       // const age = await Assessment.find({ ageGroup, quesCategory: "Task 6 (Egg Farm Task)" });
       if (ageGroup !== "common") {
-         const commonQuestions = await Assessment.find({ ageGroup: "common" });
+         const commonQuestions = await Assessment.find({ ageGroup: "common" }).sort({ quesCategory: 1 });
          if (ageQuestions.length === 0 && commonQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
          else {
-            res.status(200).json({ message: "Success", questions: [...ageQuestions, ...commonQuestions] });
+            res.status(200).json({ message: "Success", questions: [...commonQuestions, ...ageQuestions] });
          }
       }
       else {
