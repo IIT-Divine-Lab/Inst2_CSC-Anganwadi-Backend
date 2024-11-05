@@ -24,8 +24,12 @@ async function addNewQuestion(req, res) {
 
 async function getAll(req, res) {
    try {
-      const allQuestions = await Assessment.find().lean().populate('quesCategory', 'categoryName');
-      console.log(allQuestions);
+      const allQuestions = await Assessment.find().populate('quesCategory', 'categoryName totalQuestions');
+      allQuestions.sort((a, b) => {
+         if (a.quesCategory.categoryName < b.quesCategory.categoryName) return -1;
+         if (a.quesCategory.categoryName > b.quesCategory.categoryName) return 1;
+         return 0;
+      });
       if (allQuestions.length === 0) res.status(201).json({ message: "No questions found." })
       else {
          res.status(200).json({ message: "Success", questions: allQuestions });

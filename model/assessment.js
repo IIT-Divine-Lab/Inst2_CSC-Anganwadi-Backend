@@ -10,6 +10,7 @@ const assessmentSchema = new mongoose.Schema({
    quesCategory: {
       type: mongoose.Schema.ObjectId,
       required: true,
+      ref: "Category"
    },
    question: {
       structure: {
