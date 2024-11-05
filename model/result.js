@@ -15,6 +15,11 @@ const resultSchema = new mongoose.Schema({
       AnswerMarked: {
          type: [String],
          required: true
+      },
+      quesCategory: {
+         type: mongoose.Schema.ObjectId,
+         required: true,
+         ref: "Category"
       }
    }]
 })

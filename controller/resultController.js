@@ -26,7 +26,8 @@ async function submitAssessment(req, res, next) {
 
 async function getAll(req, res, next) {
    try {
-      const result = await Result.find().lean().populate('userId', 'name rollno awcentre age').populate('questions.quesId', 'quesCategory question.correctAnswer question.questionType');
+      const result = await Result.find().lean().populate('userId', 'name rollno awcentre age').populate('questions.quesId', 'question.correctAnswer question.questionType').populate('questions.quesCategory', 'categoryName');
+      console.log(result[0].questions[0]);
       if (result.length === 0) {
          res.status(201).json({
             message: "No Record Found"
@@ -38,7 +39,7 @@ async function getAll(req, res, next) {
          result
       })
    } catch (error) {
-      console.log(error.errors);
+      console.log(error);
       res.status(404).json({ message: "Fail in fetching records", error: error.errors });
    }
 }

@@ -8,7 +8,7 @@ const assessmentSchema = new mongoose.Schema({
       required: true,
    },
    quesCategory: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
       required: true,
    },
    question: {
@@ -41,7 +41,7 @@ const assessmentSchema = new mongoose.Schema({
       questionOnlyText: {
          type: String
       },
-      answerImage:{
+      answerImage: {
          type: String
       },
       totalOptions: {

@@ -24,7 +24,8 @@ async function addNewQuestion(req, res) {
 
 async function getAll(req, res) {
    try {
-      const allQuestions = await Assessment.find().lean();
+      const allQuestions = await Assessment.find().lean().populate('quesCategory', 'categoryName');
+      console.log(allQuestions);
       if (allQuestions.length === 0) res.status(201).json({ message: "No questions found." })
       else {
          res.status(200).json({ message: "Success", questions: allQuestions });
