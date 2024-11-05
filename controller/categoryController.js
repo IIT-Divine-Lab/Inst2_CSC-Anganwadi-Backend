@@ -19,7 +19,7 @@ async function addCategory(req, res) {
 
 async function getAll(req, res) {
    try {
-      const categories = await Category.find().lean();
+      const categories = await Category.find().lean().sort({ categoryName: 1 });
       if (categories.length !== 0)
          res.status(200).json({ categories });
       else
