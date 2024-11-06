@@ -26,7 +26,7 @@ async function submitAssessment(req, res, next) {
 
 async function getAll(req, res, next) {
    try {
-      const result = await Result.countDocuments() !== 0 ? await Result.find().lean().populate('userId', 'name rollno awcentre age').populate('questions.quesId', 'question.correctAnswer question.questionType').populate('questions.quesCategory', 'categoryName') : 0;
+      const result = await Result.countDocuments() !== 0 ? await Result.find().lean().populate('userId', 'name rollno awcentre age gender').populate('questions.quesId', 'question.correctAnswer question.questionType').populate('questions.quesCategory', 'categoryName') : 0;
       if (!result || result.length === 0) {
          res.status(201).json({
             message: "No Record Found"
