@@ -50,7 +50,6 @@ const assessmentSchema = new mongoose.Schema({
       },
       option: {
          type: Object,  // List of options for the question
-         required: true,
       },
       correctAnswer: {
          type: [String], // Array to handle single or multiple correct answers

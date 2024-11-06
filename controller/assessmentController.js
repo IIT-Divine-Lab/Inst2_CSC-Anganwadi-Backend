@@ -68,13 +68,14 @@ async function getQuestionAgeWise(req, res) {
          const commonQuestions = await Assessment.find({ ageGroup: "common" }).sort({ quesCategory: 1 });
          if (ageQuestions.length === 0 && commonQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
          else {
+            // res.status(200).json({ message: "Success", questions: [...ageQuestions] });
             res.status(200).json({ message: "Success", questions: [...commonQuestions, ...ageQuestions] });
          }
       }
       else {
          if (ageQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
          else {
-            res.status(200).json({ message: "Success", questions: [...ageQuestions, ...age] });
+            res.status(200).json({ message: "Success", questions: [...ageQuestions] });
          }
       }
    }
