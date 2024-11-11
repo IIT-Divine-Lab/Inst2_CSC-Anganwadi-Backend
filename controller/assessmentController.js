@@ -60,28 +60,43 @@ async function getQuestionAgeWise(req, res) {
    try {
       const { ageGroup } = req.body;
       // let ageGroup = "common";
-      const ageQuestions = await Assessment.find({ ageGroup }).sort({ quesCategory: 1 });
+      const response = [];
+      const ageQuestions = await Assessment.find({ ageGroup }).populate('quesCategory', 'categoryName');
 
       // const ageQuestions = await Assessment.find({ ageGroup, quesCategory: "Task 5 (Sorting) - Big Small" });
       // const age = await Assessment.find({ ageGroup, quesCategory: "Task 6 (Egg Farm Task)" });
       if (ageGroup !== "common") {
-         const commonQuestions = await Assessment.find({ ageGroup: "common" }).sort({ quesCategory: 1 });
+         const commonQuestions = await Assessment.find({ ageGroup: "common" }).populate('quesCategory', 'categoryName');
          if (ageQuestions.length === 0 && commonQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
          else {
+            response.push(...commonQuestions);
+            response.push(...ageQuestions);
+            response.sort((a, b) => {
+               if (a.quesCategory.categoryName < b.quesCategory.categoryName) return -1;
+               if (a.quesCategory.categoryName > b.quesCategory.categoryName) return 1;
+               return 0;
+            });
+
             // res.status(200).json({ message: "Success", questions: [...ageQuestions] });
-            res.status(200).json({ message: "Success", questions: [...commonQuestions, ...ageQuestions] });
+            res.status(200).json({ message: "Success", questions: response });
          }
       }
       else {
          if (ageQuestions.length === 0) res.status(201).json({ message: "No questions for this age group." })
          else {
-            res.status(200).json({ message: "Success", questions: [...ageQuestions] });
+            response.push(ageQuestions);
+            response.sort((a, b) => {
+               if (a.quesCategory.categoryName < b.quesCategory.categoryName) return -1;
+               if (a.quesCategory.categoryName > b.quesCategory.categoryName) return 1;
+               return 0;
+            });
+            res.status(200).json({ message: "Success", questions: response });
          }
       }
    }
    catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in fetching question age wise / common", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in fetching question age wise / common", error });
    }
 }
 
