@@ -43,4 +43,46 @@ async function getAll(req, res, next) {
    }
 }
 
-module.exports = { submitAssessment, getAll }
+async function getAllWithNoUserDetails(req, res, next) {
+   try {
+      const result = await Result.countDocuments() !== 0 ? await Result.find().lean() : [];
+
+      if (result.length === 0) {
+         return res.json({ nullUsers: [], notNullUsers: [] });
+      }
+
+      let users = result.map((val) => val.userId.toString()); // Ensure all IDs are strings
+
+      // Fetch all users in a single query
+      const students = await Student.find({ _id: { $in: users } }).lean();
+
+      // Separate null and not-null users
+      let nullUsersSet = new Set(); // Use a Set for unique nullUsers
+      let notNullUsers = [];
+
+      users.forEach((id) => {
+         const user = students.find((student) => student._id.toString() === id); // Compare as strings
+         if (user) {
+            notNullUsers.push(id);
+         } else {
+            nullUsersSet.add(id); // Add to Set to ensure uniqueness
+         }
+      });
+
+      const nullUsers = Array.from(nullUsersSet); // Convert Set back to array
+
+      let response = result.filter((val) => nullUsers.includes(val.userId))
+
+      res.json({ length: response.length, nullLength: nullUsers.length, nullUsers });
+
+      // const nullData = await result.filter((doc) => doc.userId === null);
+      // const allResults = await Result.countDocuments() !== 0 ? await Result.find().lean() : 0;
+      // res.json({ null: nullData.length, res: allResults.length });
+
+   }
+   catch (error) {
+      console.log(error);
+   }
+}
+
+module.exports = { submitAssessment, getAll, getAllWithNoUserDetails }
