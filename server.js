@@ -33,7 +33,7 @@ app.use("/api/v1/assessment", assessmentRoutes)
 app.use("/api/v1/result", resultRoutes)
 
 app.use("/", (req, res, next) => {
-   res.status(200).json({ message: "Api Working" })
+   res.status(200).json({ message: "Api Working of Instance 2" })
 })
 
 app.listen(process.env.PORT || 5000, function () {
