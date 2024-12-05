@@ -42,5 +42,5 @@ app.listen(process.env.PORT || 5000, function () {
       this.address().port,
       app.settings.env
    );
-   connection("mongodb+srv://cscAnganWadiIIT:yBaXJTXUN0uSvvDV@csctabapp.dmjpu.mongodb.net/?retryWrites=true&w=majority&appName=csctabapp");
+   connection("mongodb+srv://divinelabcsc:SdQZ3dKkp1m2AITl@cscAnganwadiI2.dmjpu.mongodb.net/?retryWrites=true&w=majority&appName=csctabapp");
 });
