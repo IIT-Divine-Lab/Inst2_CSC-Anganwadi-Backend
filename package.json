@@ -15,7 +15,7 @@
       "mongoose": "^8.7.1",
       "morgan": "^1.10.0",
       "supervisor": "^0.12.0",
-      "npm":"^10.9.0"
+      "npm": "^10.9.0"
    },
    "name": "csc---anganwadi-tablet-app",
    "version": "1.0.0",
@@ -24,7 +24,7 @@
       "start-dev": "supervisor server.js",
       "start": "node server.js",
       "build": "echo 'No build step defined'",
-      "heroku": "git push heroku main",
+      "heroku": "plink.exe -ssh root@119.18.48.149 -pw CSCAnganwadi@12 -batch 'cd Inst2_CSC-Anganwadi-Backend && git pull && pm2 restart server' > pm2_log_output.txt && cat pm2_log_output.txt",
       "repo": "git add . && git commit -m \"Changes Made\" && git push && npm run heroku"
    },
    "repository": {
