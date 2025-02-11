@@ -26,12 +26,7 @@ const assessmentSchema = new mongoose.Schema({
          required: true,
       },
       questionImage: {
-         before: {
-            type: String
-         },
-         after: {
-            type: String
-         }
+         type: Object
       },
       questionSound: {
          type: String

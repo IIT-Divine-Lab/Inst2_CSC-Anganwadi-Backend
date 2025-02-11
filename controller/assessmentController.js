@@ -2,18 +2,82 @@ const Assessment = require("../model/assessment");
 
 async function addNewQuestion(req, res) {
    try {
-      console.log(req.body);
-      const { ageGroup, quesCategory, question } = req.body;
+      const {
+         quesCategory,
+         ageGroup,
+         structure,
+         questionText,
+         questionType,
+         totalOptions,
+         correctAnswer
+      } = req.body;
 
-      const { structure, questionText, questionType, answerImage, questionImage, questionSound, questionSoundText, questionOnlyText, totalOptions, option, correctAnswer } = question;
+      let option = [];
+      let questionImage = { before: {}, after: {} };
 
-      requireQuesFields = { structure, questionText, answerImage, questionType, questionImage, questionSound, questionSoundText, questionOnlyText, totalOptions, option, correctAnswer };
+      // req.files.forEach(file => {
+      //    console.log(file)
+      //    if (file.fieldname.startsWith("option")) {
+      //       console.log("Option")
+      //       option.push({
+      //          key: file.fieldname.split(".")[1], // Extract option key (e.g., o1, o2)
+      //          filePath: file.path,
+      //          fileName: file.filename
+      //       });
+      //    } else if (file.fieldname.startsWith("questionImageBefore")) {
+      //       questionImage.before = {
+      //          filePath: file.path,
+      //          fileName: file.filename
+      //       };
+      //    } else if (file.fieldname.startsWith("questionImageAfter")) {
+      //       questionImage.after = {
+      //          filePath: file.path,
+      //          fileName: file.filename
+      //       };
+      //    }
+      // });
+      req.files.forEach(file => {
+         if (file.fieldname.startsWith("option")) {
+            option.push({
+               key: file.fieldname.split(".")[1], // Extract option key (e.g., o1, o2)
+               filePath: file.buffer,
+               fileName: file.originalname
+            });
+         } else if (file.fieldname.startsWith("questionImageBefore")) {
+            questionImage.before = {
+               filePath: file.buffer,
+               fileName: file.originalname
+            };
+         } else if (file.fieldname.startsWith("questionImageAfter")) {
+            questionImage.after = {
+               filePath: file.buffer,
+               fileName: file.originalname
+            };
+         }
+         console.log(file)
+      });
 
-      const quest = await Assessment.create({ ageGroup, quesCategory, question: requireQuesFields });
+      const newQuestion = new Assessment({
+         quesCategory,
+         ageGroup,
+         question: {
+            structure,
+            questionText,
+            questionType,
+            totalOptions,
+            correctAnswer,
+            option,
+            questionImage
+         },
+      });
+
+      console.log(newQuestion);
+
+      await newQuestion.save();
 
       res.status(200).json({
          message: "Success",
-         question: quest
+         question: newQuestion
       })
    }
    catch (error) {

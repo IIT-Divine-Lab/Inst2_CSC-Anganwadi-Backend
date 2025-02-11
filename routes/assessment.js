@@ -1,9 +1,23 @@
 const express = require("express");
-const { addNewQuestion, getQuestionAgeWise, getAll, deleteQuestion, getQuestionById } = require("../controller/assessmentController")
+const { addNewQuestion, getQuestionAgeWise, getAll, deleteQuestion, getQuestionById } = require("../controller/assessmentController");
+const multer = require("multer");
 
 const router = express.Router();
 
-router.post("/", addNewQuestion);
+// const storage = multer.diskStorage({
+//    destination: (req, file, cb) => {
+//       cb(null, "uploads/"); // Save files in "uploads" folder
+//    },
+//    filename: (req, file, cb) => {
+//       cb(null, `${Date.now()}_${file.originalname}`);
+//    }
+// });
+
+// const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
+
+
+router.post("/", upload.any(), addNewQuestion);
 router.get("/", getAll);
 router.post("/agewise", getQuestionAgeWise);
 router.delete("/:id", deleteQuestion);
