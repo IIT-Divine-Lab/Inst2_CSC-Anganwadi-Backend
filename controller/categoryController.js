@@ -15,7 +15,6 @@ async function addCategory(req, res) {
          message: "Success",
          category
       })
-
    }
    catch (error) {
       console.log(error.errors);
@@ -27,15 +26,15 @@ async function getAll(req, res) {
    try {
       const cachedCategory = await redisClient.get(`getAllCategories`);
       if (cachedCategory) {
-         console.log("Cache Hit");
+         console.log("Cache Hit: Get All Categories");
          return res.status(200).json({ categories: JSON.parse(cachedCategory) });
       }
-      console.log("Cache miss");
+      console.log("Cache Miss: Get All Categories");
 
       const categories = await Category.find().lean().sort({ categoryName: 1 });
 
       if (!categories)
-         res.status(201).json({ message: "No Data" })
+         return res.status(201).json({ message: "No Data" })
 
       await redisClient.setEx(`getAllCategories`, CACHE_EXPIRY, JSON.stringify(categories));
 

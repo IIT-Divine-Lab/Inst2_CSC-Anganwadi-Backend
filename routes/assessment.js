@@ -1,5 +1,5 @@
 const express = require("express");
-const { addNewQuestion, getQuestionAgeWise, getAll, deleteQuestion, getQuestionById } = require("../controller/assessmentController");
+const { addNewQuestion, getQuestionAgeWise, getAll, deleteQuestion, getQuestionById, modifyQuestion } = require("../controller/assessmentController");
 const multer = require("multer");
 
 const router = express.Router();
@@ -18,6 +18,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 
 router.post("/", upload.any(), addNewQuestion);
+router.put("/:id", upload.any(), modifyQuestion)
 router.get("/", getAll);
 router.post("/agewise", getQuestionAgeWise);
 router.delete("/:id", deleteQuestion);
