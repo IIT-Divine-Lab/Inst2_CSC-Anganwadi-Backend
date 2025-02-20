@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
+const cors = require("cors");
 const connection = require("./startup/db");
 const app = express();
 const userRoutes = require("./routes/student")
