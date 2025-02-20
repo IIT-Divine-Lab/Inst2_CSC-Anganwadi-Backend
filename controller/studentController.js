@@ -11,8 +11,8 @@ async function userRegister(req, res) {
       })
    }
    catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in registering user", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in registering user", error });
    }
 }
 
@@ -24,8 +24,8 @@ async function getAll(req, res) {
       else
          res.status(201).json({ message: "No Data" })
    } catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in fetching all data", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in fetching all data", error });
    }
 }
 
@@ -40,8 +40,8 @@ async function patchAssessment(req, res, next) {
 
       res.json({ message: "Success", user });
    } catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in linking assessment details to user", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in linking assessment details to user", error });
    }
 }
 

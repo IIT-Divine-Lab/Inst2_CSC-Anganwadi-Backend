@@ -38,7 +38,7 @@ const assessmentSchema = new mongoose.Schema({
          type: String
       },
       answerImage: {
-         type: String
+         type: Object
       },
       totalOptions: {
          type: Number

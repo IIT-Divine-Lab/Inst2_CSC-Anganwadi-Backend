@@ -19,7 +19,7 @@ async function submitAssessment(req, res, next) {
       }
    }
    catch (error) {
-      console.log(error.errors);
+      console.log(error);
       res.status(404).json({ message: "Fail in submitting assessment", error: error.errors });
    }
 }

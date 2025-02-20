@@ -14,11 +14,15 @@ const router = express.Router();
 // });
 
 // const upload = multer({ storage });
-const upload = multer({ storage: multer.memoryStorage() });
-
+const upload = multer({
+   storage: multer.memoryStorage(),
+   limits: {
+      fieldSize: 100 * 1024 * 1024
+   }
+});
 
 router.post("/", upload.any(), addNewQuestion);
-router.put("/:id", upload.any(), modifyQuestion)
+router.put("/:id", upload.any(), modifyQuestion);
 router.get("/", getAll);
 router.post("/agewise", getQuestionAgeWise);
 router.delete("/:id", deleteQuestion);

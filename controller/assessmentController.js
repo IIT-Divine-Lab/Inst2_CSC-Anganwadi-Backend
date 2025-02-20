@@ -20,6 +20,7 @@ async function addNewQuestion(req, res) {
 
       let option = [];
       let questionImage = { before: {}, after: {} };
+      let answerImage = {};
 
       // req.files.forEach(file => {
       //    console.log(file)
@@ -59,8 +60,12 @@ async function addNewQuestion(req, res) {
                filePath: file.buffer,
                fileName: file.originalname
             };
+         } else if (file.fieldname.startsWith("answerImage")) {
+            answerImage = {
+               filePath: file.buffer,
+               fileName: file.originalname
+            };
          }
-         console.log(file)
       });
 
       const newQuestion = await Assessment.create({
@@ -76,13 +81,14 @@ async function addNewQuestion(req, res) {
             questionImage,
             questionOnlyText,
             questionSound,
-            questionSoundText
+            questionSoundText,
+            answerImage
          },
       });
 
 
 
-      console.log(await newQuestion.populate('quesCategory', 'categoryName totalQuestions'));
+      await newQuestion.populate('quesCategory', 'categoryName totalQuestions');
 
       await redisClient.del(`getAllQuestions`);
 
@@ -92,13 +98,90 @@ async function addNewQuestion(req, res) {
       })
    }
    catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in adding question", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in adding question", error });
    }
 }
 
 async function modifyQuestion(req, res) {
+   const { id } = req.params;
+   const {
+      quesCategory,
+      ageGroup,
+      structure,
+      questionText,
+      questionType,
+      totalOptions,
+      correctAnswer,
+      questionSoundText,
+      questionOnlyText,
+      questionSound,
+      option,
+      questionImageBefore,
+      questionImageAfter,
+      answerImage
+   } = req.body;
 
+   // console.log(questionImageAfter, option, questionImageBefore)
+   // console.log(JSON.parse(questionImageAfter), JSON.parse(option), JSON.parse(questionImageBefore))
+   // console.log(typeof (questionImageAfter), typeof (option), typeof (questionImageBefore))
+
+   // console.log(JSON.parse(option))
+
+   let options = option ?
+      JSON.parse(option)
+      :
+      [];
+   let questionImage = {};
+   if (questionImageAfter) {
+      if (questionImageBefore) {
+         questionImage = { before: JSON.parse(questionImageBefore) }
+      }
+      questionImage = { ...questionImage, after: JSON.parse(questionImageAfter) }
+   }
+   else {
+      questionImage = { before: {}, after: {} }
+   }
+   let answerImages = answerImage ? JSON.parse(answerImage) : {};
+
+   req.files.length !== 0 && req.files.forEach(file => {
+      if (file.fieldname.startsWith("option")) {
+         options.push({
+            key: file.fieldname.split(".")[1], // Extract option key (e.g., o1, o2)
+            filePath: file.buffer,
+            fileName: file.originalname
+         });
+      } else if (file.fieldname.startsWith("questionImageBefore")) {
+         questionImage.before = {
+            filePath: file.buffer,
+            fileName: file.originalname
+         };
+      } else if (file.fieldname.startsWith("questionImageAfter")) {
+         questionImage.after = {
+            filePath: file.buffer,
+            fileName: file.originalname
+         };
+      } else if (file.fieldname.startsWith("answerImage")) {
+         answerImages = {
+            filePath: file.buffer,
+            fileName: file.originalname
+         };
+      }
+   });
+
+   await redisClient.del(`getAllQuestions`);
+   await redisClient.del(`getQuestion/${id}`);
+   await redisClient.del(`getQuestionsAgeWise:/${ageGroup}`);
+
+   const question = await Assessment.findByIdAndUpdate(id, { ageGroup, quesCategory, question: { structure, questionText, questionType, correctAnswer, questionImage, totalOptions, questionSound, questionOnlyText, questionSoundText, option: options, questionImage, answerImage: answerImages } }, { new: true });
+
+   if (!question) return res.status(201).json({ message: "No question found." })
+
+   await question.populate('quesCategory', 'categoryName totalQuestions');
+   
+   await redisClient.setEx(`getQuestion/${id}`, CACHE_EXPIRY, JSON.stringify(question));
+
+   res.status(200).json({ message: "Success", question });
 }
 
 async function getAll(req, res) {
@@ -106,6 +189,8 @@ async function getAll(req, res) {
       const cachedQuestions = await redisClient.get(`getAllQuestions`);
       if (cachedQuestions) {
          console.log("Cache Hit: Get All Questions");
+         if (JSON.parse(cachedQuestions).length === 0)
+            return res.status(201).json({ message: "No questions found." });
          return res.status(200).json({ message: "Success", questions: JSON.parse(cachedQuestions) });
       }
       console.log("Cache miss: Get All Questions");
@@ -125,8 +210,8 @@ async function getAll(req, res) {
       res.status(200).json({ message: "Success", questions: allQuestions });
    }
    catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in fetching question age wise / common", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in fetching question age wise / common", error });
    }
 }
 
@@ -149,8 +234,8 @@ async function getQuestionById(req, res) {
       res.status(200).json({ message: "Success", questions: question });
    }
    catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in fetching question age wise / common", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in fetching question age wise / common", error });
    }
 }
 

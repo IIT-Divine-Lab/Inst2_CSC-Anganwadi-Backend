@@ -17,8 +17,8 @@ async function addCategory(req, res) {
       })
    }
    catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in adding category", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in adding category", error });
    }
 }
 
@@ -27,6 +27,8 @@ async function getAll(req, res) {
       const cachedCategory = await redisClient.get(`getAllCategories`);
       if (cachedCategory) {
          console.log("Cache Hit: Get All Categories");
+         if (JSON.parse(cachedCategory).length === 0)
+            return res.status(201).json({ message: "No Data" });
          return res.status(200).json({ categories: JSON.parse(cachedCategory) });
       }
       console.log("Cache Miss: Get All Categories");
@@ -40,35 +42,10 @@ async function getAll(req, res) {
 
       res.status(200).json({ categories });
    } catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in fetching all data", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in fetching all data", error});
    }
 }
-
-// async function modifyTotalQuestions(req, res) {
-//    try {
-//       const { categoryName, increment } = req.body;
-//       console.log(req.body);
-//       const category = await Category.findOne({ categoryName });
-//       console.log(category.totalQuestions);
-//       if (category) {
-//          if (increment) {
-//             const newCategory = await Category.findByIdAndUpdate({ _id: category._id }, { totalQuestions: category.totalQuestions === undefined || category.totalQuestions === null ? 1 : (category.totalQuestions + 1) }, { new: true })
-//             res.status(200).json({ message: "Updated Total Questions Successfully", category: newCategory });
-//          }
-//          else {
-//             const newCategory = await Category.findByIdAndUpdate({ _id: category._id }, { totalQuestions: (category.totalQuestions - 1) }, { new: true })
-//             res.status(200).json({ message: "Updated Total Questions Successfully", category: newCategory });
-//          }
-//       }
-//       else {
-//          console.log("no category found");
-//       }
-//    } catch (error) {
-//       console.log(error);
-//       res.status(404).json({ message: "Fail in modifying category", error: error.errors });
-//    }
-// }
 
 async function modifyCategory(req, res) {
    try {
@@ -84,8 +61,8 @@ async function modifyCategory(req, res) {
          res.status(200).json({ message: "Modified Successfully", category: modifiedCategory });
       }
    } catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in modifying category", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in modifying category", error });
    }
 }
 
@@ -96,8 +73,8 @@ async function deleteCategory(req, res) {
       await redisClient.del(`getAllCategories`);
       res.status(200).json({ message: "Deleted Successfully", category });
    } catch (error) {
-      console.log(error.errors);
-      res.status(404).json({ message: "Fail in deleting category", error: error.errors });
+      console.log(error);
+      res.status(404).json({ message: "Fail in deleting category", error });
    }
 }
 
