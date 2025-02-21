@@ -7,14 +7,11 @@ const app = express();
 const userRoutes = require("./routes/student")
 const assessmentRoutes = require("./routes/assessment")
 const resultRoutes = require("./routes/result")
-const categoryRoutes = require("./routes/category")
+const categoryRoutes = require("./routes/category");
+const { deleteCache } = require("./controller/assessmentController");
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use((req, res, next) => {
-   console.log("CORS headers set by Express:", res.getHeaders());
-   next();
-});
 
 // app.use(cors());
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
@@ -34,6 +31,7 @@ app.use((req, res, next) => {
    next();
 });
 
+app.use("/api/v1/deleteCache/all", deleteCache)
 app.use("/admin/api/v1/category", categoryRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/assessment", assessmentRoutes)

@@ -95,6 +95,7 @@ async function addNewQuestion(req, res) {
       await newQuestion.populate('quesCategory', 'categoryName totalQuestions');
 
       await redisClient.del(`getAllQuestions`);
+      await redisClient.del(`getQuestionsAgeWise:/${ageGroup}`);
 
       res.status(200).json({
          message: "Success",
@@ -182,7 +183,7 @@ async function modifyQuestion(req, res) {
    if (!question) return res.status(201).json({ message: "No question found." })
 
    await question.populate('quesCategory', 'categoryName totalQuestions');
-   
+
    await redisClient.setEx(`getQuestion/${id}`, CACHE_EXPIRY, JSON.stringify(question));
 
    res.status(200).json({ message: "Success", question });
@@ -289,6 +290,22 @@ async function getQuestionAgeWise(req, res) {
    }
 }
 
+async function deleteCache(req, res) {
+   const keys = await redisClient.keys("*");
+
+   keys.map(async (key) => {
+      if (key.includes("ues")) {
+         await redisClient.del(key);
+      }
+      else if (key.includes("ategor")) {
+         await redisClient.del(key);
+      }
+      return;
+   })
+
+   res.status(200).json(keys);
+}
+
 async function deleteQuestion(req, res) {
    try {
       const { id } = req.params;
@@ -305,4 +322,4 @@ async function deleteQuestion(req, res) {
    }
 }
 
-module.exports = { addNewQuestion, modifyQuestion, getQuestionAgeWise, getAll, deleteQuestion, getQuestionById }
+module.exports = { addNewQuestion, modifyQuestion, getQuestionAgeWise, deleteCache, getAll, deleteQuestion, getQuestionById }
