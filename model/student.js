@@ -7,7 +7,8 @@ const studentSchema = new mongoose.Schema({
    },
    age: {
       type: String,
-      required: true
+      required: true,
+      enum: ["3-4", "4-5", "5-6"]
    },
    rollno: {
       type: Number,
