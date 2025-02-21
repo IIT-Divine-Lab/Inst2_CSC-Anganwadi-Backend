@@ -1,7 +1,11 @@
 const Assessment = require("../model/assessment");
 const redisClient = require("../cache/redisClient");
 
-const CACHE_EXPIRY = 60 * 60 * 24;
+// 60 = 1 minute;
+// 60 * 60 = 1 hour;
+// 60 * 60 * 8 = 8 hours;
+
+const CACHE_EXPIRY = 60 * 60 * 8;
 
 async function addNewQuestion(req, res) {
    try {
