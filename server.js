@@ -8,6 +8,7 @@ const userRoutes = require("./routes/student")
 const assessmentRoutes = require("./routes/assessment")
 const resultRoutes = require("./routes/result")
 const categoryRoutes = require("./routes/category");
+const dashboardRoutes = require("./routes/dashboard");
 const { deleteCache } = require("./controller/assessmentController");
 
 app.use(morgan("dev"));
@@ -36,6 +37,7 @@ app.use("/admin/api/v1/category", categoryRoutes)
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/assessment", assessmentRoutes)
 app.use("/api/v1/result", resultRoutes)
+app.use("/admin/api/v1/dashboard", dashboardRoutes)
 
 app.use("/", (req, res, next) => {
    res.status(200).json({ message: "Api Working of Instance 2" })
