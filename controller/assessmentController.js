@@ -211,15 +211,13 @@ async function getAll(req, res) {
       if (!allQuestions) return res.status(201).json({ message: "No questions found." })
 
       allQuestions.sort((a, b) => {
-         if (a.quesCategory.categoryName < b.quesCategory.categoryName) return -1;
-         if (a.quesCategory.categoryName > b.quesCategory.categoryName) return 1;
+         if (a?.quesCategory?.categoryName < b?.quesCategory?.categoryName) return -1;
+         if (a?.quesCategory?.categoryName > b?.quesCategory?.categoryName) return 1;
          return 0;
       });
 
       await redisClient.setEx(`getAllQuestions`, CACHE_EXPIRY, JSON.stringify(allQuestions));
-
-      
-
+     
       res.status(200).json({ message: "Success", questions: allQuestions });
    }
    catch (error) {
