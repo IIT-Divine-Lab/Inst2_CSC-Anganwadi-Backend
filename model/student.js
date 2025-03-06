@@ -8,7 +8,6 @@ const studentSchema = new mongoose.Schema({
    age: {
       type: String,
       required: true,
-      enum: ["3-4", "4-5", "5-6"]
    },
    rollno: {
       type: Number,
@@ -23,6 +22,10 @@ const studentSchema = new mongoose.Schema({
    },
    awcentre: {
       type: String,
+      required: true
+   },
+   assessmentStartTime: {
+      type: Date,
       required: true
    },
    assessId: {

@@ -1,5 +1,5 @@
 const Assessment = require("../model/assessment");
-const redisClient = require("../cache/redisClient");
+const { redisClient } = require("../cache/redisClient");
 
 // 60 = 1 minute;
 // 60 * 60 = 1 hour;

@@ -1,22 +1,19 @@
-const redisClient = require("../cache/redisClient");
 const Dashboard = require("../model/dashboard");
 const Student = require("../model/student");
+const { getCache, storeCache } = require("../cache/redisClient");
 // const Result = require("../model/result");
 
 // 60 = 1 minute;
 // 60 * 60 = 1 hour;
 // 60 * 60 * 8 = 8 hours;
 
-const CACHE_EXPIRY = 60 * 60 * 8;
-
 async function getKpis(req, res) {
    const filters = req.query ? req.query?.state === "" && req.query.district === "" && req.query.anganwadi === "" && req.query.ageGroup === "" ? undefined : req.query : undefined
    const cacheKey = `dashboard:kpis:${JSON.stringify(req.query)}`;
-   console.log("GET KPI", cacheKey);
    const matchStage = filters !== undefined ? { $match: filters } : { $match: {} };
 
    try {
-      const cachedData = await redisClient.get(cacheKey);
+      const cachedData = await getCache(cacheKey);
       if (cachedData) {
          return res.status(200).json({ message: "Success", data: JSON.parse(cachedData) });
       }
@@ -132,7 +129,7 @@ async function getKpis(req, res) {
       const response = stats.length > 0 ? stats[0] : { totalQuestions: 0, totalScore: 0, totalMaxScore: 0, accuracy: 0 };
 
       // Cache the response for 60 seconds.
-      await redisClient.setEx(cacheKey, CACHE_EXPIRY, JSON.stringify(response));
+      await storeCache(cacheKey, response);
       res.status(200).json({ message: "Success", data: response });
    } catch (error) {
       console.log(error);
@@ -186,6 +183,13 @@ async function getGenderCount(req, res) {
    const { state } = req.query;
    const matchStage = state && state !== "All" ? { awcentre: new RegExp(`^${state}`, "i") } : {}
 
+   const cacheKey = `dashboard:gendercount:${JSON.stringify(state)}`;
+   const cachedData = await getCache(cacheKey);
+   if (cachedData) {
+      console.log("Cache Hit : Get Gender Count");
+      return res.status(200).json(JSON.parse(cachedData));
+   }
+   console.log("Cache Miss : Get Gender Count");
    const response = await Student.aggregate([
       { $match: { ...matchStage } },
       {
@@ -232,10 +236,8 @@ async function getGenderCount(req, res) {
    response.forEach(stateData => {
       let pilotData = [0, 0, 0, 0, 0, 0]; // Default values
       let controlData = [0, 0, 0, 0, 0, 0];
-      console.log(stateData)
       stateData.data.forEach(entry => {
          let index = formattedData.labels.indexOf(`${entry.ageGroup} years (${entry.gender.charAt(0).toUpperCase()})`);
-         console.log(`${entry.ageGroup} years (${entry.gender.charAt(0).toUpperCase()})`);
          if (index !== -1) {
             if (entry.schoolType === "pilot") pilotData[index] = entry.count;
             else controlData[index] = entry.count;
@@ -259,6 +261,7 @@ async function getGenderCount(req, res) {
          }
       );
    });
+   await storeCache(cacheKey, formattedData);
    res.json(formattedData);
 }
 

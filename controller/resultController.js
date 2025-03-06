@@ -80,10 +80,10 @@ async function calculateResult(resultId, user, res) {
 }
    */
 
-   res.status(200).json({
-      message: "Success",
-      question: newQuestionData
-   })
+   // res.status(200).json({
+   //    message: "Success",
+   //    question: newQuestionData
+   // })
 }
 
 async function submitAssessment(req, res, next) {
@@ -100,10 +100,10 @@ async function submitAssessment(req, res, next) {
 
          calculateResult(quest._id, user, res);
 
-         // res.status(200).json({
-         //    message: "Success",
-         //    question: quest
-         // })
+         res.status(200).json({
+            message: "Success",
+            question: quest
+         })
       }
    }
    catch (error) {

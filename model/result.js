@@ -20,6 +20,10 @@ const resultSchema = new mongoose.Schema({
          type: mongoose.Schema.ObjectId,
          required: true,
          ref: "Category"
+      },
+      timeTaken: {
+         type: Number,
+         required: true
       }
    }]
 })

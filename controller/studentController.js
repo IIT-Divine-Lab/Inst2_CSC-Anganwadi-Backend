@@ -2,8 +2,8 @@ const Student = require("../model/student");
 
 async function userRegister(req, res) {
    try {
-      const { name, age, rollno, gender, awcentre } = req.body;
-      const user = await Student.create({ name, age, rollno, gender, awcentre });
+      const { name, age, rollno, gender, awcentre, startTime } = req.body;
+      const user = await Student.create({ name, age, rollno, gender, awcentre, assessmentStartTime: startTime });
 
       res.status(200).json({
          message: "Success",
