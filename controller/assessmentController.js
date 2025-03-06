@@ -202,7 +202,6 @@ async function getAll(req, res) {
          console.log("Cache Hit: Get All Questions");
          if (JSON.parse(cachedQuestions).length === 0)
             return res.status(201).json({ message: "No questions found." });
-         postProcess();
          return res.status(200).json({ message: "Success", questions: JSON.parse(cachedQuestions) });
       }
       console.log("Cache miss: Get All Questions");
@@ -219,7 +218,7 @@ async function getAll(req, res) {
 
       await redisClient.setEx(`getAllQuestions`, CACHE_EXPIRY, JSON.stringify(allQuestions));
 
-      await postProcess();
+      
 
       res.status(200).json({ message: "Success", questions: allQuestions });
    }
